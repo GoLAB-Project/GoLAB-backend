@@ -31,4 +31,10 @@ public class BanList {
 	private String userId;
 	@Column(name = "BAN_ID", nullable = false)
 	private String banId;
+
+	public BanList(String userId, String banId) {
+		this.userId = userId;
+		this.banId = banId;
+	}
+
 }
