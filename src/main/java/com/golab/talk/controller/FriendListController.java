@@ -17,7 +17,7 @@ import com.golab.talk.dto.FriendListDto;
 import com.golab.talk.service.FriendListService;
 
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/friendlist")
 public class FriendListController {
 
 	@Autowired
