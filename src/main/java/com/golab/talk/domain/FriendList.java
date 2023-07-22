@@ -32,4 +32,9 @@ public class FriendList {
 	@Column(name = "FRIEND_ID", nullable = false)
 	private String friendId;
 
+	public FriendList(String userId, String friendId) {
+		this.userId = userId;
+		this.friendId = friendId;
+	}
+
 }
