@@ -1,20 +1,21 @@
 package com.golab.talk.service;
 
-import com.golab.talk.domain.User;
+import com.golab.talk.dto.LoginDto;
 import com.golab.talk.dto.UserDto;
 
 public interface UserService {
 
-    void registerUser(UserDto userDto);
-    String duplicationCheckNickname(String nickname);
+	void registerUser(UserDto userDto);
 
-    String duplicationCheckId(String userId);
+	String duplicationCheckNickname(String nickname);
 
-    String duplicationCheckEmail(String email);
+	String duplicationCheckId(String userId);
 
-    String getUserId(String email);
+	String duplicationCheckEmail(String email);
 
-    String getPassword(UserDto userDto);
+	String getUserId(String email);
 
-    UserDto login(UserDto userDto);
+	String getPassword(UserDto userDto);
+
+	UserDto login(LoginDto loginDto);
 }
