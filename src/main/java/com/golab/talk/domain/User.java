@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.golab.talk.dto.UserDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,4 +32,18 @@ public class User {
 	private String email;
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
+	@Column(name = "PROFILE_IMAGE")
+	private String profileImage;
+	@Column(name = "REG_DATE")
+	private String regDate;
+
+	public UserDto toDto() {
+		return UserDto.builder()
+			.userId(userId)
+			.nickname(nickname)
+			.email(email)
+			.profileImage(profileImage)
+			.build();
+	}
+
 }
