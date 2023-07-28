@@ -23,7 +23,6 @@ import lombok.ToString;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "USER_ID", nullable = false)
 	private String userId;
 
@@ -33,9 +32,4 @@ public class User {
 	private String email;
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
-	@Column(name = "PROFILE_IMAGE")
-	private String profileImage;
-	@Column(name = "REG_DATE", nullable = false)
-	private String regDate;
-
 }
