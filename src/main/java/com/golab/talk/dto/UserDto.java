@@ -1,36 +1,31 @@
 package com.golab.talk.dto;
 
 import com.golab.talk.domain.User;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
-    private String userId;
-    private String nickname;
-    private String email;
-    private String password;
+	private String userId;
+	private String nickname;
+	private String email;
+	private String profileImage;
 
-    public User toEntity() {
-        return User.builder()
-                .userId(userId)
-                .nickname(nickname)
-                .email(email)
-                .password(password)
-                .build();
-    }
+	public User toEntity() {
+		return User.builder()
+			.userId(userId)
+			.nickname(nickname)
+			.email(email)
+			.profileImage(profileImage)
+			.build();
+	}
 
-    public UserDto(String userId, String email){
-        this.userId = userId;
-        this.email = email;
-    }
-
-    public void setUserDtoLogin(UserDto userDto){
-        String password = userDto.getEmail();
-        userDto.setEmail("");
-        userDto.setPassword(password);
-    }
 }
