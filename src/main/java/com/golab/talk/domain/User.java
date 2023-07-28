@@ -30,9 +30,4 @@ public class User {
 	private String email;
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
-	@Column(name = "PROFILE_IMAGE")
-	private String profileImage;
-	@Column(name = "REG_DATE", nullable = false)
-	private String regDate;
-
 }
