@@ -33,7 +33,10 @@ public class SocialLogin {
 	private int platformType;
 	@Column(name = "SOCIAL_EMAIL", nullable = false)
 	private String socialEmail;
-	@Column(name = "TOKEN", nullable = false)
-	private String token;
 
+	public SocialLogin(String userId, int platformType, String socialEmail) {
+		this.userId = userId;
+		this.platformType = platformType;
+		this.socialEmail = socialEmail;
+	}
 }
