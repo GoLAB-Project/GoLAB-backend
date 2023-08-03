@@ -16,4 +16,6 @@ public interface FriendListRepository extends JpaRepository<FriendList, Long> {
 	@Query(value = "SELECT friend_id FROM friend_list WHERE user_id = :userId", nativeQuery = true)
 	List<String> findByUserId(String userId);
 
+	boolean existsByUserIdAndFriendId(String userId, String friendId);
+
 }

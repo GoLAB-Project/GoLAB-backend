@@ -54,4 +54,9 @@ public class FriendListController {
 		}
 	}
 
+	@GetMapping("/{userId}/{friendId}")
+	public ResponseEntity<Boolean> isExistsInFriendList(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+		return new ResponseEntity<>(friendListService.isExistsInFriendList(userId, friendId), HttpStatus.OK);
+	}
+
 }

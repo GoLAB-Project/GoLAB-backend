@@ -36,4 +36,9 @@ public class FriendListServiceImpl implements FriendListService {
 		return list;
 	}
 
+	@Override
+	public boolean isExistsInFriendList(String userId, String friendId) {
+		return friendListRepository.existsByUserIdAndFriendId(userId, friendId);
+	}
+
 }

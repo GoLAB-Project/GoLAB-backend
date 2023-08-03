@@ -12,4 +12,6 @@ public interface FriendListService {
 
 	List<String> showFriendList(String userId);
 
+	boolean isExistsInFriendList(String userId, String friendId);
+
 }
