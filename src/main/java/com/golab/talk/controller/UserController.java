@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//import com.golab.talk.dto.LoginDto;
+import com.golab.talk.dto.LoginDto;
 import com.golab.talk.dto.UserDto;
 import com.golab.talk.service.UserService;
 
@@ -85,20 +85,20 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) {
-//        UserDto loggedInUser = userService.login(loginDto);
-//
-//        if (loggedInUser != null) {
-//            // 로그인에 성공한 경우 "loggedInUser" 모델 속성에 유저 정보를 저장하고 세션에 저장
-//            HttpSession session = request.getSession();
-//            session.setAttribute("loggedInUser", loggedInUser);
-//            UserDto a = (UserDto)session.getAttribute("loggedInUser");
-//            return new ResponseEntity<>("로그인에 성공했습니다.", HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("로그인에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) {
+        UserDto loggedInUser = userService.login(loginDto);
+
+        if (loggedInUser != null) {
+            // 로그인에 성공한 경우 "loggedInUser" 모델 속성에 유저 정보를 저장하고 세션에 저장
+            HttpSession session = request.getSession();
+            session.setAttribute("loggedInUser", loggedInUser);
+            UserDto a = (UserDto)session.getAttribute("loggedInUser");
+            return new ResponseEntity<>("로그인에 성공했습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("로그인에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
