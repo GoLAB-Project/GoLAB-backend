@@ -1,5 +1,7 @@
 package com.golab.talk.domain;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,27 +16,28 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "BAN_LIST")
+@Table(name = "ROOM")
 @Getter
 @Builder
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanList {
+public class Room {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "BAN_IDX", nullable = false)
-	private int banIdx;
+	@Column(name = "id", nullable = false)
+	private int id;
 
-	@Column(name = "USER_ID", nullable = false)
-	private String userId;
-	@Column(name = "BAN_ID", nullable = false)
-	private String banId;
-
-	public BanList(String userId, String banId) {
-		this.userId = userId;
-		this.banId = banId;
-	}
+	@Column(name = "identifier", nullable = false)
+	private String identifier;
+	@Column(name = "type", nullable = false)
+	private String type;
+	@Column(name = "last_chat", columnDefinition = "text")
+	private String lastChat;
+	@Column(name = "created_at", nullable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 
 }
