@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanListDto {
+public class BanDto {
 
-	private String userId;
-	private String banId;
+	private int myId;
+	private int banId;
+	private String banName;
 
 }

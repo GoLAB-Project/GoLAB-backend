@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendListDto {
+public class FriendDto {
 
-	private String userId;
-	private String friendId;
+	private int myId;
+	private int friendId;
+	private String friendName;
 
 }
