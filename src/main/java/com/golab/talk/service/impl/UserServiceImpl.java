@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.golab.talk.domain.User;
-//import com.golab.talk.dto.LoginDto;
+import com.golab.talk.dto.LoginDto;
 import com.golab.talk.dto.UserDto;
 import com.golab.talk.repository.UserRepository;
 import com.golab.talk.service.UserService;
@@ -62,12 +62,12 @@ public class UserServiceImpl implements UserService {
         return password;
     }
 
-//    @Override
-//    public UserDto login(LoginDto loginDto) {
-//        User user = userRepository.findUserByUserIdAndPassword(loginDto.getUserId(), loginDto.getPassword());
-//        UserDto userDto = (user == null ? null : user.toDto());
-//        return userDto;
-//    }
+    @Override
+    public UserDto login(LoginDto loginDto) {
+        User user = userRepository.findUserByUserIdAndPassword(loginDto.getUserId(), loginDto.getPassword());
+        UserDto userDto = (user == null ? null : user.toDto());
+        return userDto;
+    }
 
     @Override
     public boolean checkPassword(String password, HttpServletRequest request) {
