@@ -117,4 +117,9 @@ public class ChattingServiceImpl implements ChattingService {
 		return response;
 	}
 
+	@Override
+	public Participant saveParticipant(Participant participant) {
+		return participantRepository.save(participant);
+	}
+
 }
