@@ -1,6 +1,6 @@
 package com.golab.talk.dto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,9 +16,9 @@ public class RoomListResponseDto {
 	private String type;
 	private String identifier;
 	private String roomName;
-	private String[] participant;
+	private int[] participant;
 	private String lastChat;
 	private int notReadChat;
-	private String lastReadChatId;
-	private Date createAt;
+	private int lastReadChatId;
+	private LocalDateTime updatedAt;
 }
