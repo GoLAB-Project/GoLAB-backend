@@ -24,8 +24,8 @@ public class User {
 	@Column(name = "USER_ID", nullable = false)
 	private String userId;
 
-	@Column(name = "NICKNAME", nullable = false)
-	private String nickname;
+	@Column(name = "NAME", nullable = false)
+	private String name;
 	@Column(name = "EMAIL", nullable = false)
 	private String email;
 	@Column(name = "PASSWORD", nullable = false)
