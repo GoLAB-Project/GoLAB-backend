@@ -1,5 +1,7 @@
 package com.golab.talk.domain;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,24 +13,36 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
-@Table(name = "CHATTING_ROOM")
+@Table(name = "CHATTING")
 @Getter
 @Builder
-@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChattingRoom {
+public class Chatting {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", nullable = false)
+	private int id;
+
 	@Column(name = "ROOM_ID", nullable = false)
 	private int roomId;
 
-	@Column(name = "SENDER", nullable = false)
-	private String sender;
-	@Column(name = "RECEIVER", nullable = false)
-	private String receiver;
+	@Column(name = "SEND_USER_ID", nullable = false)
+	private int sendUserId;
+
+	@Column(name = "MESSAGE", nullable = false)
+	private String message;
+
+	@Column(name = "NOT_READ", nullable = false)
+	private int notRead;
+
+	@Column(name = "CREATED_AT", nullable = false)
+	private LocalDateTime createdAt;
+
+	@Column(name = "UPDATED_AT", nullable = false)
+	private LocalDateTime updatedAt;
+	
 }
