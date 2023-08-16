@@ -42,4 +42,14 @@ public class Participant {
 	@Column(name = "UPDATED_AT", nullable = false)
 	private LocalDateTime updatedAt;
 
+	public Participant(int userId, int roomId, String roomName) {
+		this.userId = userId;
+		this.roomId = roomId;
+		this.roomName = roomName;
+		this.notReadChat = 0;
+		this.lastReadChatId = 0;
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
+	}
+
 }

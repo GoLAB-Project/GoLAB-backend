@@ -40,4 +40,12 @@ public class Room {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 
+	public Room(String type, String identifier, String lastChat) {
+		this.type = type;
+		this.identifier = identifier;
+		this.lastChat = lastChat;
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
+	}
+
 }

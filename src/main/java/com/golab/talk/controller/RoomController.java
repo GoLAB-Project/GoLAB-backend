@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.golab.talk.domain.Participant;
+import com.golab.talk.domain.Room;
 import com.golab.talk.dto.ChattingResponseDto;
 import com.golab.talk.dto.CreateRoomRequestDto;
 import com.golab.talk.dto.CreateRoomResponseDto;
 import com.golab.talk.dto.ParticipantDto;
 import com.golab.talk.dto.RoomListResponseDto;
+import com.golab.talk.dto.UserResponseDto;
 import com.golab.talk.service.ChattingService;
+import com.golab.talk.service.RoomService;
 
 @RestController
 @RequestMapping("/room")
@@ -26,35 +30,51 @@ public class RoomController {
 	@Autowired
 	private ChattingService chattingService;
 
+	@Autowired
+	private RoomService roomService;
+
 	@PostMapping("/create")
 	public ResponseEntity<CreateRoomResponseDto> createRoom(@RequestBody CreateRoomRequestDto createRoomRequestDto) {
-		CreateRoomResponseDto createRoomResponseDto = null;
+		CreateRoomResponseDto data = new CreateRoomResponseDto();
 
-		// findRoom = findByIdentifier()
+		int myId = createRoomRequestDto.getMyId();
+		String type = createRoomRequestDto.getType();
+		String roomName = createRoomRequestDto.getRoomName();
+		String identifier = createRoomRequestDto.getIdentifier();
+		UserResponseDto[] participant = createRoomRequestDto.getParticipant();
 
-		/* true -> findRoomInfo = findRoomInfo() userId/roomId
-			CreateRoomResponse
-				room_id: findRoom.id,
-				identifier: findRoom.identifier,
-				type: findRoom.type,
-				room_name: findRoomInfo!.room_name,
-				not_read_chat: findRoomInfo!.not_read_chat,
-				last_read_chat_id: findRoomInfo!.last_read_chat_id,
-				last_chat: findRoom.last_chat,
-				updatedAt: findRoom.updatedAt
-		 */
+		Room findRoom = roomService.getRoomByIdentifier(identifier);
+		if (findRoom != null) {
+			Participant findRoomInfo = roomService.getRoomInfo(myId, findRoom.getId());
 
-		/* false
+			data.setRoomId(findRoom.getId());
+			data.setIdentifier(findRoom.getIdentifier());
+			data.setType(findRoom.getType());
+			data.setRoomName(findRoomInfo.getRoomName()); // 문재인
+			data.setNotReadChat(findRoomInfo.getNotReadChat());
+			data.setLastReadChatId(findRoomInfo.getLastReadChatId());
+			data.setLastChat(findRoom.getLastChat());
+			data.setUpdatedAt(findRoom.getUpdatedAt());
+		} else {
+			Room room = roomService.createRoom(new Room(type, identifier, ""));
 
-			1. createRoom -> 생성과 동시에 객체를 반환
-			2. createParticipant
-			3. 2(~N)명의 참여자 정보를 통해, 생성자가 아닌 참가자들의 createParticipant
-			4. CreateRoomResponse
+			for (UserResponseDto user : participant) {
+				Participant saveUser = new Participant(user.getId(), room.getId(), roomName);
+				chattingService.saveParticipant(saveUser);
+			}
 
-		 */
+			data.setRoomId(room.getId());
+			data.setIdentifier(room.getIdentifier());
+			data.setType(room.getType());
+			data.setRoomName(roomName);
+			data.setNotReadChat(0);
+			data.setLastReadChatId(0);
+			data.setLastChat(room.getLastChat());
+			data.setUpdatedAt(room.getUpdatedAt());
+		}
 
-		if (createRoomResponseDto != null) {
-			return new ResponseEntity<>(createRoomResponseDto, HttpStatus.OK);
+		if (data != null) {
+			return new ResponseEntity<>(data, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

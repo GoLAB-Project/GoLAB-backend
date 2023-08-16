@@ -20,4 +20,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
 	@Query(value = "SELECT user_id FROM participant WHERE room_id = :roomId", nativeQuery = true)
 	List<Integer> getParticipantIdList(int roomId);
 
+	@Query(value = "SELECT * FROM participant WHERE user_id = :userId AND room_id = :roomId", nativeQuery = true)
+	Participant findByUserIdAndRoomId(int userId, int roomId);
+
 }
