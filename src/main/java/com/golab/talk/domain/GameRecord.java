@@ -9,11 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table(name = "GAME_RECORD")
 @Getter
+@Setter
 @Builder
 @ToString(callSuper = true)
 @NoArgsConstructor
@@ -30,7 +32,5 @@ public class GameRecord {
 	private int wins;
 	@Column(name = "MMR", nullable = false)
 	private int mmr;
-	@Column(name = "RANKING")
-	private int ranking;
 
 }
