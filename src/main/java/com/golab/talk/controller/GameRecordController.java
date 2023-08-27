@@ -26,7 +26,7 @@ public class GameRecordController {
 	private GameRecordService gameRecordService;
 
 	// 회원가입 후 전적 생성
-	@PostMapping("/createGameRecord/{userId}")
+	@PostMapping("/{userId}")
 	public ResponseEntity<String> createGameRecord(@RequestBody GameRecordDto gameRecordDto) {
 		try {
 			gameRecordService.createGameRecord(gameRecordDto);
@@ -50,9 +50,9 @@ public class GameRecordController {
 
 	//나와 상대의 전적 조회
 	@GetMapping("/{userId1}/{userId2}")
-	public ResponseEntity<List<GameRecordDto>> findByUserId(@PathVariable("userId1") String userId1,
+	public ResponseEntity<List<GameRecordWithRankDto>> findRecordPlayers(@PathVariable("userId1") String userId1,
 		@PathVariable("userId2") String userId2) {
-		List<GameRecordDto> list = gameRecordService.findMMR(userId1, userId2);
+		List<GameRecordWithRankDto> list = gameRecordService.findRecordPlayers(userId1, userId2);
 
 		if (list != null) {
 			return new ResponseEntity<>(list, HttpStatus.OK);
@@ -62,7 +62,7 @@ public class GameRecordController {
 	}
 
 	//전체 랭킹 조회
-	@GetMapping("/rank")
+	@GetMapping("/ranks")
 	public ResponseEntity<List<GameRecordWithRankDto>> showGameRecordList() {
 		List<GameRecordWithRankDto> list = gameRecordService.showGameRecordList();
 
@@ -76,7 +76,7 @@ public class GameRecordController {
 	// 게임 후 랭킹
 
 	//게임 후 MMR 갱신 - 게임 구현 후 추가 예정
-	@PutMapping("/updateRecord")
+	@PutMapping("")
 	public ResponseEntity<String> updateRecord(@RequestBody PlayerDto playerDto) {
 		try {
 			gameRecordService.updateRecord(playerDto);

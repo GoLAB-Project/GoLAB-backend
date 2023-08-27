@@ -46,14 +46,15 @@ public class GameRecordServiceImpl implements GameRecordService {
 	}
 
 	@Override
-	public List<GameRecordDto> findMMR(String userId1, String userId2) {
-		List<GameRecord> gameRecords = gameRecordRepository.findMMRWithRanking(userId1, userId2);
+	public List<GameRecordWithRankDto> findRecordPlayers(String userId1, String userId2) {
+		List<Map<String, Object>> gameRecords = gameRecordRepository.findMMRWithRanking(userId1, userId2);
 		// GameRecord를 GameRecordDto로 변환하여 리스트로 반환
-		return gameRecords.stream().map(gameRecord -> new GameRecordDto(
-				gameRecord.getUserId(),
-				gameRecord.getGames(),
-				gameRecord.getWins(),
-				gameRecord.getMmr()
+		return gameRecords.stream().map(gameRecord -> new GameRecordWithRankDto(
+				String.valueOf(gameRecord.get("userId")),
+				(int)gameRecord.get("games"),
+				(int)gameRecord.get("wins"),
+				(int)gameRecord.get("mmr"),
+				(Integer.parseInt(String.valueOf(gameRecord.get("ranking"))))
 			))
 			.collect(Collectors.toList());
 	}
@@ -61,7 +62,6 @@ public class GameRecordServiceImpl implements GameRecordService {
 	@Override
 	public List<GameRecordWithRankDto> showGameRecordList() {
 		List<Map<String, Object>> gameRecords = gameRecordRepository.findAllByOrderByMmrAscWithRanking();
-		// GameRecord를 GameRecordWithRankDto로 변환하여 리스트로 반환
 
 		return gameRecords.stream().map(gameRecord -> new GameRecordWithRankDto(
 				String.valueOf(gameRecord.get("userId")),
@@ -80,6 +80,7 @@ public class GameRecordServiceImpl implements GameRecordService {
 
 		GameRecordWithRankDto winner = findByUserId(winnerId);
 		GameRecordWithRankDto loser = findByUserId(loserId);
+
 		System.out.println("winner: " + winner.toString());
 		System.out.println("loser: " + loser.toString());
 
@@ -107,6 +108,7 @@ public class GameRecordServiceImpl implements GameRecordService {
 
 			System.out.println("winner: " + winner.toString());
 			System.out.println("loser: " + loser.toString());
+			
 		} else {
 			System.out.println("전적을 찾을 수 없습니다.");
 		}

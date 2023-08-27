@@ -12,7 +12,7 @@ public interface GameRecordService {
 
 	GameRecordWithRankDto findByUserId(String userId);
 
-	List<GameRecordDto> findMMR(String userId1, String userId2);
+	List<GameRecordWithRankDto> findRecordPlayers(String userId1, String userId2);
 
 	List<GameRecordWithRankDto> showGameRecordList();
 
