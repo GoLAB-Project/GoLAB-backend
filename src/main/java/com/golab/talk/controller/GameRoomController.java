@@ -114,7 +114,7 @@ public class GameRoomController {
 
 	//방 상태 변경
 	//모두 준비 완료 하면 게임 시작
-	@PostMapping("/{gameRoomId}")
+	@PutMapping("/{gameRoomId}")
 	public ResponseEntity<String> updateGameRoomStatus(@RequestBody int roomStatus, int gameRoomId) {
 		//게임이 시작했다면
 
