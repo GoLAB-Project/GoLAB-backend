@@ -101,8 +101,8 @@ public class GameRoomController {
 	}
 
 	//키워드 가져오기
-	@GetMapping("/{gameRoomId}/keyword")
-	public ResponseEntity<List<String>> randomKeyword(@RequestParam("gameRoomId") int gameRoomId) {
+	@GetMapping("/keyword")
+	public ResponseEntity<List<String>> randomKeyword() {
 		List<String> list = gameRoomService.randomKeyword();
 
 		if (list != null) {
@@ -114,7 +114,7 @@ public class GameRoomController {
 
 	//방 상태 변경
 	//모두 준비 완료 하면 게임 시작
-	@PostMapping("/update/{gameRoomId}")
+	@PostMapping("/{gameRoomId}")
 	public ResponseEntity<String> updateGameRoomStatus(@RequestBody int roomStatus, int gameRoomId) {
 		//게임이 시작했다면
 
