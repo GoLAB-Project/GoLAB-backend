@@ -18,7 +18,6 @@ import com.golab.talk.service.GameRoomService;
 import lombok.extern.java.Log;
 
 @Log
-@Component
 @RestController
 @RequestMapping("/scheduler")
 public class Scheduler {
