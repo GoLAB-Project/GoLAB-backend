@@ -35,8 +35,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		// 본인에게 다시 보내기
 		//session.sendMessage(new TextMessage(receivedMessage));
 
-		// 현재 연결된 모든 클라이언트에 메시지 전송
+		// 현재 연결된 모든 클라이언트에 메시지 전송(본인 제외)
 		for (WebSocketSession currentSession : sessions) {
+			if (currentSession == session)
+				continue;
 			currentSession.sendMessage(new TextMessage(receivedMessage));
 		}
 	}
