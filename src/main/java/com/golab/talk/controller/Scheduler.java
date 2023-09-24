@@ -54,6 +54,10 @@ public class Scheduler {
 
 		List<String> list = keywordService.findAllKeyword();
 
+		for (String keyword : list) {
+			String question = "우리가 대한민국 10대들을 대상으로 1~3분 정도 되는 토론 게임을 하려고 해. 그 때 \""
+				+ keyword + "\"에 대한 짧은 주제를 10가지 제시해줘.";
+		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
