@@ -25,7 +25,7 @@ public class Scheduler {
 	private GameRoomService gameRoomService;
 
 	@Scheduled(cron = "0 50 23 * * *") //매일 23시 50분에 실행
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	@DeleteMapping("/gameRoom")
 	public ResponseEntity<String> deleteGameRoom() {
 		System.out.println("GameRoom을 reset합니다." + LocalDateTime.now());
