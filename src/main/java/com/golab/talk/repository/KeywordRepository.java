@@ -12,7 +12,7 @@ import com.golab.talk.domain.Keyword;
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
 	//모든 키워드 조회
-	@Query(value = "SELECT key_name FROM keyword", nativeQuery = true)
-	List<String> findAllKeyword();
+	@Query(value = "SELECT * FROM keyword", nativeQuery = true)
+	List<Keyword> findAll();
 
 }
