@@ -54,9 +54,9 @@ public class TopicController {
 		int topicListNum = 3;
 		int topicNum = 1;
 
-		for (int i = 0; i < list.size(); i++) {
-			String keyword = list.get(i).getKeyName();
-			int keyId = list.get(i).getKeyId();
+		for (KeywordDto keywordDto : list) {
+			String keyword = keywordDto.getKeyName();
+			int keyId = keywordDto.getKeyId();
 			String question = "대한민국 10대들을 대상으로 1~3분 정도 되는 토론 게임을 하려고 해. 그 때 \""
 				+ keyword + "\"에 대한 짧은 주제를 " + topicListNum + "가지 제시해줘. 그리고 다른 말은 하지 말고 주제의 뒤에는 꼭\"$\"을 넣고 말해줄래?";
 			String result = GPTService.getChatResponse(question);
