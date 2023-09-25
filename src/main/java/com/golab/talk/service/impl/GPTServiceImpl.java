@@ -3,12 +3,12 @@ package com.golab.talk.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.golab.talk.service.ChatService;
+import com.golab.talk.service.GPTService;
 
 import io.github.flashvayne.chatgpt.service.ChatgptService;
 
 @Service
-public class ChatServiceImpl implements ChatService {
+public class GPTServiceImpl implements GPTService {
 
 	@Autowired
 	private ChatgptService chatgptService;
