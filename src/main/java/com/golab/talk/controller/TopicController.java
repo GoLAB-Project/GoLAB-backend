@@ -77,7 +77,7 @@ public class TopicController {
 			topicService.saveAll(resultTopicList);
 			return new ResponseEntity<>("오늘의 주제 " + totalTopicNum + "개 저장했습니다.", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("오늘의 주제를 저장에 실패했습니다.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("오늘의 주제 저장에 실패했습니다.", HttpStatus.BAD_REQUEST);
 		}
 
 	}
