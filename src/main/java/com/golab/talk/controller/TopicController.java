@@ -46,7 +46,7 @@ public class TopicController {
 	@Scheduled(cron = "0 55 23 * * *") //매일 23시 55분에 실행
 	@PostMapping("/today")
 	public ResponseEntity<String> getTodayTopic() {
-		System.out.println("오늘의 주제를 생성합니다." + LocalDateTime.now());
+
 		log.info("오늘의 주제를 생성합니다." + LocalDateTime.now());
 
 		List<KeywordDto> list = keywordService.findAll();

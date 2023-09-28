@@ -32,7 +32,7 @@ public class Scheduler {
 	@Transactional(rollbackOn = Exception.class)
 	@DeleteMapping("/gameRoom")
 	public ResponseEntity<String> deleteGameRoom() {
-		System.out.println("GameRoom을 reset합니다." + LocalDateTime.now());
+
 		log.info("GameRoom을 reset합니다." + LocalDateTime.now());
 
 		if (gameRoomService.deleteGameRoom() == 1) {
@@ -48,7 +48,7 @@ public class Scheduler {
 	@Transactional(rollbackOn = Exception.class)
 	@DeleteMapping("/topic")
 	public ResponseEntity<String> deleteTopic() {
-		System.out.println("Topic을 reset합니다." + LocalDateTime.now());
+
 		log.info("Topic을 reset합니다." + LocalDateTime.now());
 
 		if (topicService.deleteTopic() == 1) {
