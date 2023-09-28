@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.golab.talk.service.GameRoomService;
-import com.golab.talk.service.KeywordService;
+import com.golab.talk.service.TopicService;
 
 import lombok.extern.java.Log;
 
@@ -26,13 +26,13 @@ public class Scheduler {
 	private GameRoomService gameRoomService;
 
 	@Autowired
-	private KeywordService keywordService;
+	private TopicService topicService;
 
 	@Scheduled(cron = "0 50 23 * * *") //매일 23시 50분에 실행
 	@Transactional(rollbackOn = Exception.class)
 	@DeleteMapping("/gameRoom")
 	public ResponseEntity<String> deleteGameRoom() {
-		System.out.println("GameRoom을 reset합니다." + LocalDateTime.now());
+
 		log.info("GameRoom을 reset합니다." + LocalDateTime.now());
 
 		if (gameRoomService.deleteGameRoom() == 1) {
@@ -44,4 +44,19 @@ public class Scheduler {
 		}
 	}
 
+	@Scheduled(cron = "0 50 23 * * *") //매일 23시 50분에 실행
+	@Transactional(rollbackOn = Exception.class)
+	@DeleteMapping("/topic")
+	public ResponseEntity<String> deleteTopic() {
+
+		log.info("Topic을 reset합니다." + LocalDateTime.now());
+
+		if (topicService.deleteTopic() == 1) {
+			//게임방 삭제 후 room_id 1로 초기화
+			topicService.resetTopicId();
+			return new ResponseEntity<>("주제 목록을 삭제하고 topic_id가 1로 초기화 되었습니다.", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("주제 목록 초기화를 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

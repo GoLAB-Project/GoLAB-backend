@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,10 +43,10 @@ public class TopicController {
 		return GPTService.getChatResponse(question);
 	}
 
-	//@Scheduled(cron = "0 50 23 * * *") //매일 23시 50분에 실행
+	@Scheduled(cron = "0 55 23 * * *") //매일 23시 55분에 실행
 	@PostMapping("/today")
 	public ResponseEntity<String> getTodayTopic() {
-		System.out.println("오늘의 주제를 생성합니다." + LocalDateTime.now());
+
 		log.info("오늘의 주제를 생성합니다." + LocalDateTime.now());
 
 		List<KeywordDto> list = keywordService.findAll();
