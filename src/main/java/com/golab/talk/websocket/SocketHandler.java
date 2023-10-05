@@ -1,11 +1,14 @@
 package com.golab.talk.websocket;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -13,13 +16,28 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golab.talk.domain.Chatting;
+import com.golab.talk.domain.Room;
+import com.golab.talk.dto.SocketReceiveDto;
 import com.golab.talk.dto.SocketSendDto;
 import com.golab.talk.dto.UserDto;
+import com.golab.talk.repository.ChattingRepository;
+import com.golab.talk.repository.RoomRepository;
 
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
 	private Set<WebSocketSession> sessions = new HashSet<>();
+
+	private RoomRepository roomRepository;
+
+	private ChattingRepository chattingRepository;
+
+	@Autowired
+	public SocketHandler(RoomRepository roomRepository, ChattingRepository chattingRepository) {
+		this.roomRepository = roomRepository;
+		this.chattingRepository = chattingRepository;
+	}
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -47,38 +65,51 @@ public class SocketHandler extends TextWebSocketHandler {
 		String receivedMessage = message.getPayload();
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		SocketSendDto sendDto = objectMapper.readValue(receivedMessage, SocketSendDto.class);
+		SocketReceiveDto receiveDto = objectMapper.readValue(receivedMessage, SocketReceiveDto.class);
 
 		// message를 파싱하여 처리
-		int roomId = Integer.parseInt(sendDto.getRoomId());
-		String sendUserId =
+		int sendUserId =
 			session.getAttributes().get("userId") != null ?
-				session.getAttributes().get("userId").toString() : "";
-		String receiveUserId = sendDto.getReceiveUserId();
-		String content = sendDto.getMessage();
+				Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
+		int receiveUserId = Integer.parseInt(receiveDto.getReceiveUserId());
+		String content = receiveDto.getMessage();
 
-		System.out.println(roomId + " " + sendUserId + " " + receiveUserId + " " + content);
+		System.out.println(sendUserId + " " + receiveUserId + " " + content);
+
+		LocalDateTime currentDateTime = LocalDateTime.now();
 
 		// 채팅방 update
+		String identifier =
+			sendUserId < receiveUserId ? sendUserId + "-" + receiveUserId : receiveUserId + "-" + sendUserId;
+		roomRepository.updateByIdentifier(content, currentDateTime, identifier);
+
+		// 채팅 update
+		int roomId = roomRepository.findByIdentifier(identifier).getId();
+		chattingRepository.insertByRoomId(roomId, sendUserId, content, 1, currentDateTime, currentDateTime);
 
 		for (WebSocketSession currentSession : sessions) {
 			if (currentSession == session) {
-				// 채팅목록 update
+				objectMapper = new ObjectMapper();
 
-				// update 채팅방 + update 채팅목록 + 메시지
-				session.sendMessage(new TextMessage(receivedMessage));
+				// 채팅목록 get -> update 채팅방 + update 채팅목록 + 메시지
+				List<Room> roomList = roomRepository.getRoomListByUserId(sendUserId);
+				List<Chatting> chatList = chattingRepository.getChattingListByRoomId(roomId);
+				SocketSendDto sendDto = new SocketSendDto(roomList, chatList);
+				session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendDto)));
 				continue;
 			}
 
-			String currentUserId = currentSession.getAttributes().get("userId").toString();
+			int currentUserId = Integer.parseInt(currentSession.getAttributes().get("userId").toString());
 
-			if (receiveUserId.equals(currentUserId)) {
-				// 채팅목록 update
+			if (receiveUserId == currentUserId) {
+				objectMapper = new ObjectMapper();
 
-				// update 채팅방 + update 채팅목록 + 메시지
-				currentSession.sendMessage(new TextMessage(receivedMessage));
+				// 채팅목록 get -> update 채팅방 + update 채팅목록 + 메시지
+				List<Room> roomList = roomRepository.getRoomListByUserId(receiveUserId);
+				List<Chatting> chatList = chattingRepository.getChattingListByRoomId(roomId);
+				SocketSendDto sendDto = new SocketSendDto(roomList, chatList);
+				currentSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendDto)));
 			}
 		}
 	}
-
 }

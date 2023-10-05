@@ -1,9 +1,11 @@
 package com.golab.talk.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.golab.talk.domain.Chatting;
@@ -27,4 +29,14 @@ public interface ChattingRepository extends JpaRepository<Chatting, Integer> {
 	// 채팅 정보 업데이트
 	// 채팅방 정보 업데이트
 
+	/* 2023-10-05 20:00 추가
+	 * 우선 not Read는 구현하지 않는다.
+	 */
+
+	@Query(value = "insert into room VALUES(room_id=?1, send_user_id=?2, message=?3, not_read=1, createdAt=?4, updatedAt=?5)", nativeQuery = true)
+	int insertByRoomId(int roomId, int sendUserId, String message, int notRead, LocalDateTime createdAt,
+		LocalDateTime updatedAt);
+
+	@Query(value = "select * from room where room_id=?1 order by id desc limit 1", nativeQuery = true)
+	List<Chatting> getChattingListByRoomId(int roodId);
 }
