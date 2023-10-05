@@ -78,7 +78,6 @@ public class SocketHandler extends TextWebSocketHandler {
 				// update 채팅방 + update 채팅목록 + 메시지
 				currentSession.sendMessage(new TextMessage(receivedMessage));
 			}
-
 		}
 	}
 

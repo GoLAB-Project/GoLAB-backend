@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+<<<<<<<< HEAD:src/main/java/com/golab/talk/dto/GameRecordDto.java
 public class GameRecordDto {
 
 	private String userId;
@@ -16,4 +17,9 @@ public class GameRecordDto {
 	private int wins;
 	private int mmr;
 
+========
+public class ReadChatResponseDto {
+	private int roomId;
+	private int[] lastReadChatIdRange;
+>>>>>>>> 3d0ae788e863679478fa948f0ba9242a66fda551:src/main/java/com/golab/talk/dto/ReadChatResponseDto.java
 }
