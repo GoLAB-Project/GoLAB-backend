@@ -20,6 +20,11 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
 	@Modifying
 	@Transactional
+	@Query(value = "insert into room(identifier, type, last_chat) values(?1, ?2, ?3)", nativeQuery = true)
+	int createRoom(String identifier, String type, String lastChat);
+
+	@Modifying
+	@Transactional
 	@Query(value = "update room set last_chat = ?1, updated_at = ?2 where identifier = ?3", nativeQuery = true)
 	int updateByIdentifier(String lastChat, LocalDateTime updatedTime, String identifier);
 

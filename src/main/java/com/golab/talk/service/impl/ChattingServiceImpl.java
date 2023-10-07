@@ -122,4 +122,27 @@ public class ChattingServiceImpl implements ChattingService {
 		return participantRepository.save(participant);
 	}
 
+	@Override
+	public List<Chatting> getChattingList(int receiveUserId) {
+		// session을 파싱하여 처리
+		// int sendUserId =
+		// 	session.getAttributes().get("userId") != null ?
+		// 		Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
+
+		int sendUserId = 1; // <Muk> 임시로 1로 설정
+		String identifier =
+			sendUserId < receiveUserId ? sendUserId + "-" + receiveUserId : receiveUserId + "-" + sendUserId;
+
+		// 하단의 결과가 null일 경우, 채팅방이 없는 것이므로 채팅방을 생성한다.
+		int roomId = -1;
+		try {
+			roomId = roomRepository.findByIdentifier(identifier).getId();
+		} catch (Exception e) {
+			roomRepository.createRoom(identifier, "individual", "");
+			roomId = roomRepository.findByIdentifier(identifier).getId();
+		}
+
+		return chattingRepository.getChattingListByRoomId(roomId);
+	}
+
 }

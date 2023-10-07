@@ -2,6 +2,7 @@ package com.golab.talk.service;
 
 import java.util.List;
 
+import com.golab.talk.domain.Chatting;
 import com.golab.talk.domain.Participant;
 import com.golab.talk.dto.ChattingResponseDto;
 import com.golab.talk.dto.ParticipantDto;
@@ -21,5 +22,7 @@ public interface ChattingService {
 	List<RoomListResponseDto> getRoomListResponse(int userId, List<ParticipantDto> roomData);
 
 	Participant saveParticipant(Participant participant);
+
+	List<Chatting> getChattingList(int receiveUserId);
 
 }

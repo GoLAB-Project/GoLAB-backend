@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.golab.talk.domain.Chatting;
 import com.golab.talk.domain.Room;
 import com.golab.talk.dto.SocketReceiveDto;
@@ -65,16 +66,17 @@ public class SocketHandler extends TextWebSocketHandler {
 		String receivedMessage = message.getPayload();
 
 		ObjectMapper objectMapper = new ObjectMapper();
+
 		SocketReceiveDto receiveDto = objectMapper.readValue(receivedMessage, SocketReceiveDto.class);
 
-		// message를 파싱하여 처리
-		int sendUserId =
-			session.getAttributes().get("userId") != null ?
-				Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
+		// session과 message를 파싱하여 처리
+		// int sendUserId =
+		// 	session.getAttributes().get("userId") != null ?
+		// 		Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
+
+		int sendUserId = 1; // <Muk> 임시로 1로 설정
 		int receiveUserId = Integer.parseInt(receiveDto.getReceiveUserId());
 		String content = receiveDto.getMessage();
-
-		System.out.println(sendUserId + " " + receiveUserId + " " + content);
 
 		LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -85,11 +87,13 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		// 채팅 update
 		int roomId = roomRepository.findByIdentifier(identifier).getId();
-		chattingRepository.insertByRoomId(roomId, sendUserId, content, 1, currentDateTime, currentDateTime);
+
+		chattingRepository.insertByRoomId(roomId, sendUserId, content, 1);
 
 		for (WebSocketSession currentSession : sessions) {
 			if (currentSession == session) {
 				objectMapper = new ObjectMapper();
+				objectMapper.registerModule(new JavaTimeModule());
 
 				// 채팅목록 get -> update 채팅방 + update 채팅목록 + 메시지
 				List<Room> roomList = roomRepository.getRoomListByUserId(sendUserId);
@@ -103,6 +107,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
 			if (receiveUserId == currentUserId) {
 				objectMapper = new ObjectMapper();
+				objectMapper.registerModule(new JavaTimeModule());
 
 				// 채팅목록 get -> update 채팅방 + update 채팅목록 + 메시지
 				List<Room> roomList = roomRepository.getRoomListByUserId(receiveUserId);
