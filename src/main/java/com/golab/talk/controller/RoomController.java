@@ -50,7 +50,7 @@ public class RoomController {
 			data.setRoomId(findRoom.getId());
 			data.setIdentifier(findRoom.getIdentifier());
 			data.setType(findRoom.getType());
-			data.setRoomName(findRoomInfo.getRoomName()); // 문재인
+			data.setRoomName(findRoomInfo.getRoomName());
 			data.setNotReadChat(findRoomInfo.getNotReadChat());
 			data.setLastReadChatId(findRoomInfo.getLastReadChatId());
 			data.setLastChat(findRoom.getLastChat());
