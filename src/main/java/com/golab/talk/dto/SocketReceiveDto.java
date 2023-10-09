@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocketReceiveDto {
+	private String type;
 	private String roomId;
 	private String receiveUserId;
 	private String message;

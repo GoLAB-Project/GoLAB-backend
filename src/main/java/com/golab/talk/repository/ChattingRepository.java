@@ -41,4 +41,9 @@ public interface ChattingRepository extends JpaRepository<Chatting, Integer> {
 
 	@Query(value = "select * from chatting where room_id=?1 order by id", nativeQuery = true)
 	List<Chatting> getChattingListByRoomId(int roodId);
+
+	@Modifying
+	@Transactional
+	@Query(value = "update chatting set not_read=?3 where room_id=?1 and send_user_id=?2", nativeQuery = true)
+	int updateByRoomId(int roomId, int sendUserId, int notRead);
 }
