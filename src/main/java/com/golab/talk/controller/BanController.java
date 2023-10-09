@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.golab.talk.dto.BanListDto;
-import com.golab.talk.service.BanListService;
+import com.golab.talk.dto.BanDto;
+import com.golab.talk.service.BanService;
 
 @RestController
-@RequestMapping("banlist")
-public class BanListController {
+@RequestMapping("ban")
+public class BanController {
 
 	@Autowired
-	private BanListService banListService;
+	private BanService banService;
 
 	@PostMapping
-	public ResponseEntity<String> addBanList(@RequestBody BanListDto banListDto) {
+	public ResponseEntity<String> addBanList(@RequestBody BanDto banDto) {
 		try {
-			banListService.addBanList(banListDto);
+			banService.addBanList(banDto);
 			return new ResponseEntity<>("친구 차단을 성공했어요.", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("친구 차단을 실패했어요.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -34,18 +34,18 @@ public class BanListController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deleteBanList(@RequestBody BanListDto banListDto) {
+	public ResponseEntity<String> deleteBanList(@RequestBody BanDto banDto) {
 		try {
-			banListService.deleteBanList(banListDto);
+			banService.deleteBanList(banDto);
 			return new ResponseEntity<>("차단 해제를 성공했어요.", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("차단 해제를 실패했어요.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@GetMapping("/{userId}")
-	public ResponseEntity<List<String>> showBanList(@PathVariable("userId") String userId) {
-		List<String> list = banListService.showBanList(userId);
+	@GetMapping("/{myId}")
+	public ResponseEntity<List<String>> showBanList(@PathVariable("myId") int myId) {
+		List<String> list = banService.showBanList(myId);
 
 		if (list != null) {
 			return new ResponseEntity<>(list, HttpStatus.OK);

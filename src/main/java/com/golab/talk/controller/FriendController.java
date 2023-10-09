@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.golab.talk.dto.FriendListDto;
-import com.golab.talk.service.FriendListService;
+import com.golab.talk.dto.FriendDto;
+import com.golab.talk.service.FriendService;
 
 @RestController
-@RequestMapping("/friendlist")
-public class FriendListController {
+@RequestMapping("/friend")
+public class FriendController {
 
 	@Autowired
-	private FriendListService friendListService;
+	private FriendService friendService;
 
 	@PostMapping
-	public ResponseEntity<String> addFriendList(@RequestBody FriendListDto friendListDto) {
+	public ResponseEntity<String> addFriendList(@RequestBody FriendDto friendDto) {
 		try {
-			friendListService.addFriendList(friendListDto);
+			friendService.addFriendList(friendDto);
 			return new ResponseEntity<>("친구 추가를 성공했어요.", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("친구 추가를 실패했어요.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -34,18 +34,18 @@ public class FriendListController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deleteFriendList(@RequestBody FriendListDto friendListDto) {
+	public ResponseEntity<String> deleteFriendList(@RequestBody FriendDto friendDto) {
 		try {
-			friendListService.deleteFriendList(friendListDto);
+			friendService.deleteFriendList(friendDto);
 			return new ResponseEntity<>("친구 삭제를 성공했어요.", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("친구 삭제를 실패했어요.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@GetMapping("/{userId}")
-	public ResponseEntity<List<String>> showFriendList(@PathVariable("userId") String userId) {
-		List<String> list = friendListService.showFriendList(userId);
+	@GetMapping("/{myId}")
+	public ResponseEntity<List<String>> showFriendList(@PathVariable("myId") int myId) {
+		List<String> list = friendService.showFriendList(myId);
 
 		if (list != null) {
 			return new ResponseEntity<>(list, HttpStatus.OK);

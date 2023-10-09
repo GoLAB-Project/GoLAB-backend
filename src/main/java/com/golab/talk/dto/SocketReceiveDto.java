@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanListDto {
-
-	private String userId;
-	private String banId;
-
+public class SocketReceiveDto {
+	private String roomId;
+	private String receiveUserId;
+	private String message;
 }

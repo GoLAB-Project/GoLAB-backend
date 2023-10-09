@@ -1,9 +1,10 @@
 package com.golab.talk.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.golab.talk.dto.UserDto;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,21 +19,43 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 public class User {
 
 	@Id
-	@Column(name = "USER_ID", nullable = false)
-	private String userId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", nullable = false)
+	private int id;
 
-	@Column(name = "NICKNAME", nullable = false)
-	private String nickname;
+	@Column(name = "USER_ID", nullable = false, unique = true)
+	private String userId;
+	@Column(name = "NAME", nullable = false, unique = true)
+	private String name;
 	@Column(name = "EMAIL", nullable = false)
 	private String email;
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
-	@Column(name = "PROFILE_IMAGE")
-	private String profileImage;
-	@Column(name = "REG_DATE", nullable = false)
-	private String regDate;
+	@Column(name = "PROFILE_IMG_URL")
+	private String profileImgUrl;
+	@Column(name = "CREATED_AT")
+	private String createdAt;
+	@Column(name = "UPDATED_AT")
+	private String updatedAt;
+
+	public User(String userId, String name, String email, String password){
+		this.userId = userId;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
+
+	public UserDto toDto() {
+		return UserDto.builder()
+				.userId(userId)
+				.name(name)
+				.email(email)
+				.password(password)
+				.build();
+	}
 
 }

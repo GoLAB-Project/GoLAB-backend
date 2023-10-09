@@ -14,27 +14,34 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "BAN_LIST")
+@Table(name = "BAN")
 @Getter
 @Builder
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanList {
+public class Ban {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "BAN_IDX", nullable = false)
-	private int banIdx;
+	@Column(name = "ID", nullable = false)
+	private int id;
 
-	@Column(name = "USER_ID", nullable = false)
-	private String userId;
+	@Column(name = "MY_ID", nullable = false)
+	private int myId;
 	@Column(name = "BAN_ID", nullable = false)
-	private String banId;
+	private int banId;
+	@Column(name = "BAN_NAME", nullable = false)
+	private String banName;
+	// @Column(name = "CREATED_AT", nullable = false)
+	// private LocalDateTime createdAt;
+	// @Column(name = "UPDATED_AT", nullable = false)
+	// private LocalDateTime updatedAt;
 
-	public BanList(String userId, String banId) {
-		this.userId = userId;
+	public Ban(int myId, int banId, String banName) {
+		this.myId = myId;
 		this.banId = banId;
+		this.banName = banName;
 	}
 
 }

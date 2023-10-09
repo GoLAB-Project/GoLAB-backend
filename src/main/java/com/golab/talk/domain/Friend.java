@@ -14,27 +14,34 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "FRIEND_LIST")
+@Table(name = "FRIEND")
 @Getter
 @Builder
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendList {
+public class Friend {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "FRIEND_IDX", nullable = false)
-	private int friendIdx;
+	@Column(name = "ID", nullable = false)
+	private int id;
 
-	@Column(name = "USER_ID", nullable = false)
-	private String userId;
+	@Column(name = "MY_ID", nullable = false)
+	private int myId;
 	@Column(name = "FRIEND_ID", nullable = false)
-	private String friendId;
+	private int friendId;
+	@Column(name = "FRIEND_NAME", nullable = false)
+	private String friendName;
+	// @Column(name = "CREATED_AT", nullable = false)
+	// private LocalDateTime createdAt;
+	// @Column(name = "UPDATED_AT", nullable = false)
+	// private LocalDateTime updatedAt;
 
-	public FriendList(String userId, String friendId) {
-		this.userId = userId;
+	public Friend(int myId, int friendId, String friendName) {
+		this.myId = myId;
 		this.friendId = friendId;
+		this.friendName = friendName;
 	}
 
 }
