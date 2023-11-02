@@ -3,6 +3,7 @@ package com.golab.talk.websocket;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +56,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		sessions.add(session);
 	}
 
+
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		super.afterConnectionClosed(session, status);
@@ -69,12 +71,18 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		SocketReceiveDto receiveDto = objectMapper.readValue(receivedMessage, SocketReceiveDto.class);
 
+		Map map = (Map)session.getAttributes();
+		UserDto loginInfo = (UserDto)map.get("loggedInUser");
+//		String userId = loginInfo.getUserId();
+//		System.out.println(userId);
+
+
 		// session과 message를 파싱하여 처리
 		// int sendUserId =
 		// 	session.getAttributes().get("userId") != null ?
 		// 		Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
 
-		int sendUserId = 1; // <Muk> 임시로 1로 설정
+		int sendUserId = loginInfo.getId(); // <Muk> 임시로 1로 설정  <범> 로그인한 사람 id로 변경
 		int receiveUserId = Integer.parseInt(receiveDto.getReceiveUserId());
 		String content = receiveDto.getMessage();
 
@@ -83,12 +91,23 @@ public class SocketHandler extends TextWebSocketHandler {
 		// 채팅방 update
 		String identifier =
 			sendUserId < receiveUserId ? sendUserId + "-" + receiveUserId : receiveUserId + "-" + sendUserId;
-		roomRepository.updateByIdentifier(content, currentDateTime, identifier);
-
-		// 채팅 update
+//		roomRepository.updateByIdentifier(content, currentDateTime, identifier);
+//
+//		// 채팅 update
 		int roomId = roomRepository.findByIdentifier(identifier).getId();
 
-		chattingRepository.insertByRoomId(roomId, sendUserId, content, 1);
+//		chattingRepository.insertByRoomId(roomId, sendUserId, content, 1);
+
+		if (receiveDto.getType().equals("chat")) {
+			// 채팅방 update
+			roomRepository.updateByIdentifier(content, currentDateTime, identifier);
+
+			// 채팅 update
+			chattingRepository.insertByRoomId(roomId, sendUserId, content, 1);
+		} else {
+			// 읽음 처리(receiveUserId는 실제로 보낸 사람의 id(sendUserId)이다.(추후 수정할 예정))
+			chattingRepository.updateByRoomId(roomId, receiveUserId, 0);
+		}
 
 		for (WebSocketSession currentSession : sessions) {
 			if (currentSession == session) {

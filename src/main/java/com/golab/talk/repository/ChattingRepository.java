@@ -16,6 +16,11 @@ public interface ChattingRepository extends JpaRepository<Chatting, Integer> {
 
 	List<Chatting> findByIdLessThanAndRoomIdOrderByIdDesc(int cursor, int roomId, Pageable pageable);
 
+	@Modifying
+	@Transactional
+	@Query(value = "update chatting set not_read=?3 where room_id=?1 and send_user_id=?2", nativeQuery = true)
+	int updateByRoomId(int roomId, int sendUserId, int notRead);
+
 	// Repository + Service + Controller 로직 정비
 
 	// 채팅 생성 -> {roomId, sendUserId, message, 1, datetime, datetime}

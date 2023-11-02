@@ -93,7 +93,6 @@ public class UserController {
             // 로그인에 성공한 경우 "loggedInUser" 모델 속성에 유저 정보를 저장하고 세션에 저장
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", loggedInUser);
-            UserDto a = (UserDto)session.getAttribute("loggedInUser");
             return new ResponseEntity<>("로그인에 성공했습니다.", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("로그인에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -106,7 +105,7 @@ public class UserController {
         HttpSession session = request.getSession(false);
         // session이 null이 아니라는건 기존에 세션이 존재했었다는 뜻이므로
         // 세션이 null이 아니라면 session.invalidate()로 세션 삭제해주기.
-        if(session != null) {
+        if(session.getAttribute("loggedInUser")!=null) {
             session.invalidate();
             return new ResponseEntity<>("로그아웃 되었습니다.", HttpStatus.OK);
         }
@@ -160,5 +159,15 @@ public class UserController {
     //        // 아래는 세션에 "loggedInUser" 속성이 없을 때 기본으로 사용할 값이나, 실제로는 로그인 성공 시 세션에 저장된 값을 반환해야 함
     //        return new UserDto();
     //    }
+
+    @GetMapping("/id")
+    public ResponseEntity<Integer> getId(HttpServletRequest request) {
+        Integer idValue = 0;
+        if(existSession(request)) {
+            idValue = Integer.valueOf(userService.getId(request));
+            return new ResponseEntity<>(idValue,HttpStatus.OK);
+        }
+        else return new ResponseEntity<>(idValue,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

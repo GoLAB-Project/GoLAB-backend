@@ -3,6 +3,7 @@ package com.golab.talk.service.impl;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.golab.talk.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,14 +13,13 @@ import org.springframework.stereotype.Service;
 import com.golab.talk.domain.Chatting;
 import com.golab.talk.domain.Participant;
 import com.golab.talk.domain.Room;
-import com.golab.talk.dto.ChattingResponseDto;
-import com.golab.talk.dto.ParticipantDto;
-import com.golab.talk.dto.RoomDto;
-import com.golab.talk.dto.RoomListResponseDto;
 import com.golab.talk.repository.ChattingRepository;
 import com.golab.talk.repository.ParticipantRepository;
 import com.golab.talk.repository.RoomRepository;
 import com.golab.talk.service.ChattingService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Service
 public class ChattingServiceImpl implements ChattingService {
@@ -123,13 +123,14 @@ public class ChattingServiceImpl implements ChattingService {
 	}
 
 	@Override
-	public List<Chatting> getChattingList(int receiveUserId) {
-		// session을 파싱하여 처리
-		// int sendUserId =
-		// 	session.getAttributes().get("userId") != null ?
-		// 		Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
-
+	public List<Chatting> getChattingList(int receiveUserId, HttpServletRequest request) {
 		int sendUserId = 1; // <Muk> 임시로 1로 설정
+
+		// session을 파싱하여 처리
+		HttpSession session = request.getSession(false);
+		sendUserId = ((UserDto)session.getAttribute("loggedInUser")).getId();
+
+
 		String identifier =
 			sendUserId < receiveUserId ? sendUserId + "-" + receiveUserId : receiveUserId + "-" + sendUserId;
 
@@ -145,4 +146,9 @@ public class ChattingServiceImpl implements ChattingService {
 		return chattingRepository.getChattingListByRoomId(roomId);
 	}
 
+	//범석 추가
+	@Override
+	public List<ChattingListDto> getRoomList(int userId) {
+		return participantRepository.getRoomByUserId(userId);
+	}
 }

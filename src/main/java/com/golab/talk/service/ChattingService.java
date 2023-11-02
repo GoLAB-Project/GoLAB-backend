@@ -4,10 +4,9 @@ import java.util.List;
 
 import com.golab.talk.domain.Chatting;
 import com.golab.talk.domain.Participant;
-import com.golab.talk.dto.ChattingResponseDto;
-import com.golab.talk.dto.ParticipantDto;
-import com.golab.talk.dto.RoomDto;
-import com.golab.talk.dto.RoomListResponseDto;
+import com.golab.talk.dto.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface ChattingService {
 
@@ -23,6 +22,9 @@ public interface ChattingService {
 
 	Participant saveParticipant(Participant participant);
 
-	List<Chatting> getChattingList(int receiveUserId);
+	List<Chatting> getChattingList(int receiveUserId, HttpServletRequest request);
+
+	//범석추가
+	List<ChattingListDto> getRoomList(int userId);
 
 }

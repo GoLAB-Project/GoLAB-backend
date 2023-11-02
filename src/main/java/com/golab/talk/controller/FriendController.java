@@ -2,6 +2,7 @@ package com.golab.talk.controller;
 
 import java.util.List;
 
+import com.golab.talk.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.golab.talk.dto.FriendDto;
 import com.golab.talk.service.FriendService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/friend")
@@ -43,8 +47,15 @@ public class FriendController {
 		}
 	}
 
-	@GetMapping("/{myId}")
-	public ResponseEntity<List<String>> showFriendList(@PathVariable("myId") int myId) {
+//	@GetMapping("/{myId}")
+//	public ResponseEntity<List<String>> showFriendList(@PathVariable("myId") int myId,
+
+	@GetMapping("/")
+	public ResponseEntity<List<String>> showFriendList(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if(session == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);;
+		UserDto a = (UserDto)session.getAttribute("loggedInUser");
+		int myId = a.getId();
 		List<String> list = friendService.showFriendList(myId);
 
 		if (list != null) {
