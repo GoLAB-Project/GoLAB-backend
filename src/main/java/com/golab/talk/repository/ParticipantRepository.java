@@ -26,7 +26,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
 
 
 	//범석 추가
-	@Query(value = "SELECT u.profile_img_url as profile_img_url, u.name as name, p.room_id as room_id " +
+	@Query(value = "SELECT u.profile_img_url as profile_img_url, u.name as name, p.room_id as room_id, u.id as id " +
 			"FROM user u INNER JOIN participant p ON u.id = p.user_id " +
 			"WHERE p.room_id IN (SELECT room_id FROM participant WHERE user_id = :userId) AND p.user_id <> :userId", nativeQuery = true)
 	List<ChattingListDto> getRoomByUserId(int userId);

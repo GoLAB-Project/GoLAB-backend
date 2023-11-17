@@ -12,4 +12,5 @@ public interface ChattingListDto {
     String getProfile_img_url();
     String getName();
     int getRoom_id();
+    int getId();
 }

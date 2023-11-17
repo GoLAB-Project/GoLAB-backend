@@ -80,6 +80,8 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		int sendUserId = loginInfo.getId(); // <Muk> 임시로 1로 설정
 		int receiveUserId = Integer.parseInt(receiveDto.getReceiveUserId());
+
+		System.out.println("sendUserId : "+sendUserId+"\nreceiveUserId : "+receiveUserId);
 		String content = receiveDto.getMessage();
 
 		LocalDateTime currentDateTime = LocalDateTime.now();
@@ -107,7 +109,8 @@ public class SocketHandler extends TextWebSocketHandler {
 				continue;
 			}
 
-			int currentUserId = Integer.parseInt(currentSession.getAttributes().get("userId").toString());
+//			int currentUserId = Integer.parseInt(currentSession.getAttributes().get("userId").toString());
+			int currentUserId = sendUserId;
 
 			if (receiveUserId == currentUserId) {
 				objectMapper = new ObjectMapper();
