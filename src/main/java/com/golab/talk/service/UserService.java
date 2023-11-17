@@ -26,4 +26,6 @@ public interface UserService {
     int updatePassword(String password, HttpServletRequest request);
 
     int updateName(String name, HttpServletRequest request);
+
+    int getId(HttpServletRequest request);
 }

@@ -3,6 +3,7 @@ package com.golab.talk.websocket;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,26 +75,26 @@ public class SocketHandler extends TextWebSocketHandler {
 		// 	session.getAttributes().get("userId") != null ?
 		// 		Integer.parseInt(session.getAttributes().get("userId").toString()) : -1;
 
-		int sendUserId = 1; // <Muk> 임시로 1로 설정
+		Map map = (Map)session.getAttributes();
+		UserDto loginInfo = (UserDto)map.get("loggedInUser");
+
+		int sendUserId = loginInfo.getId(); // <Muk> 임시로 1로 설정
 		int receiveUserId = Integer.parseInt(receiveDto.getReceiveUserId());
+
+		System.out.println("sendUserId : "+sendUserId+"\nreceiveUserId : "+receiveUserId);
 		String content = receiveDto.getMessage();
 
 		LocalDateTime currentDateTime = LocalDateTime.now();
 
+		// 채팅방 update
 		String identifier =
 			sendUserId < receiveUserId ? sendUserId + "-" + receiveUserId : receiveUserId + "-" + sendUserId;
+		roomRepository.updateByIdentifier(content, currentDateTime, identifier);
+
+		// 채팅 update
 		int roomId = roomRepository.findByIdentifier(identifier).getId();
 
-		if (receiveDto.getType().equals("chat")) {
-			// 채팅방 update
-			roomRepository.updateByIdentifier(content, currentDateTime, identifier);
-
-			// 채팅 update
-			chattingRepository.insertByRoomId(roomId, sendUserId, content, 1);
-		} else {
-			// 읽음 처리(receiveUserId는 실제로 보낸 사람의 id(sendUserId)이다.(추후 수정할 예정))
-			chattingRepository.updateByRoomId(roomId, receiveUserId, 0);
-		}
+		chattingRepository.insertByRoomId(roomId, sendUserId, content, 1);
 
 		for (WebSocketSession currentSession : sessions) {
 			if (currentSession == session) {
@@ -108,8 +109,8 @@ public class SocketHandler extends TextWebSocketHandler {
 				continue;
 			}
 
-			/* <Muk> 세션 구현 전까지 막음(채팅방에 있는 유저 중 본인이 아닌 상대방 세션을 찾는 부분)
-			int currentUserId = Integer.parseInt(currentSession.getAttributes().get("userId").toString());
+//			int currentUserId = Integer.parseInt(currentSession.getAttributes().get("userId").toString());
+			int currentUserId = sendUserId;
 
 			if (receiveUserId == currentUserId) {
 				objectMapper = new ObjectMapper();
@@ -120,8 +121,7 @@ public class SocketHandler extends TextWebSocketHandler {
 				List<Chatting> chatList = chattingRepository.getChattingListByRoomId(roomId);
 				SocketSendDto sendDto = new SocketSendDto(roomList, chatList);
 				currentSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendDto)));
-			} */
+			}
 		}
-
 	}
 }

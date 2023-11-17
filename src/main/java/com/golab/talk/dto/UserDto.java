@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    private int id;
     private String userId;
     private String name;
     private String email;
@@ -27,5 +28,4 @@ public class UserDto {
                 .password(password)
                 .build();
     }
-
 }
