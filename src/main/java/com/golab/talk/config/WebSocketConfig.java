@@ -9,6 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import com.golab.talk.repository.ChattingRepository;
 import com.golab.talk.repository.RoomRepository;
 import com.golab.talk.websocket.SocketHandler;
+import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 @Configuration
 @EnableWebSocket
@@ -21,7 +22,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(new SocketHandler(roomRepository, chattingRepository), "/socket").setAllowedOrigins("*");
+		registry.addHandler(new SocketHandler(roomRepository, chattingRepository), "/socket")
+				.addInterceptors(new HttpSessionHandshakeInterceptor())
+				.setAllowedOrigins("*");
 	}
 
 }

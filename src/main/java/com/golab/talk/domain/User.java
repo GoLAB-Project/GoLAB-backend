@@ -42,7 +42,8 @@ public class User {
 	@Column(name = "UPDATED_AT")
 	private String updatedAt;
 
-	public User(String userId, String name, String email, String password){
+	public User(int id, String userId, String name, String email, String password){
+		this.id = id;
 		this.userId = userId;
 		this.name = name;
 		this.email = email;
@@ -51,6 +52,7 @@ public class User {
 
 	public UserDto toDto() {
 		return UserDto.builder()
+				.id(id)
 				.userId(userId)
 				.name(name)
 				.email(email)

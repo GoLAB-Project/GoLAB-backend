@@ -104,4 +104,14 @@ public class UserServiceImpl implements UserService {
         }
         return check;
     }
+
+    @Override
+    public int getId(HttpServletRequest request) {
+        int id = 0;
+        HttpSession session = request.getSession(false);
+        if(session!=null) {
+            id = ((UserDto) session.getAttribute("loggedInUser")).getId();
+        }
+        return id;
+    }
 }
