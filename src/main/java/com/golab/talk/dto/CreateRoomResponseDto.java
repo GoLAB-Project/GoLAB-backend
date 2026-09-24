@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateRoomResponseDto {
 	private int roomId;
-	private String identifier;
+	// identifier 제거 - roomId 중심으로 통일
 	private String type;
 	private String roomName;
 	private String lastChat;

@@ -44,7 +44,7 @@ public class GameRecordController {
 		if (gameRecordWithRankDto != null) {
 			return new ResponseEntity<>(gameRecordWithRankDto, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 

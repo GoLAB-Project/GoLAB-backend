@@ -15,7 +15,7 @@ public class ChattingResponseDto {
 	private int roomId;
 	private int sendUserId;
 	private String message;
-	private int notRead;
+	// notRead 제거 - Participant.lastReadChatId 로 읽음 상태 관리
 	private LocalDateTime createdAt;
 
 }

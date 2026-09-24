@@ -33,7 +33,7 @@ public class GameRoomController {
 		if (room != null) {
 			return new ResponseEntity<>("방을 생성하였습니다.", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("방을 생성할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("방을 생성할 수 없습니다.", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class GameRoomController {
 		if (room != null) {
 			return new ResponseEntity<>(room, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -94,10 +94,14 @@ public class GameRoomController {
 		@RequestParam("gameRoomPW") String gameRoomPW) {
 		GameRoomDto room = gameRoomService.findByGameRoomId(gameRoomId);
 
+		if (room == null) {
+			return new ResponseEntity<>("존재하지 않는 방입니다.", HttpStatus.NOT_FOUND);
+		}
+
 		if (room.getGameRoomPW().equals(gameRoomPW)) {
 			return new ResponseEntity<>("비밀번호가 일치합니다.", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("비밀번호가 일치하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
 		}
 	}
 

@@ -1,11 +1,8 @@
 package com.golab.talk.dto;
 
-import java.util.List;
-
 import com.golab.talk.domain.Chatting;
 import com.golab.talk.domain.Room;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class SocketSendDto {
-	private List<Room> roomList;
-	private List<Chatting> chattingList;
+	private String type;    // CHAT | READ | ROOM_UPDATE
+	private int roomId;
+	private Integer userId;
+	private Integer lastReadChatId;
+	private Chatting chatting;  // CHAT 이벤트 시
+	private Room room;          // CHAT / ROOM_UPDATE 이벤트 시
 }

@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ParticipantDto {
 	private int roomId;
-	private String room_name;
-	private int not_read_chat;
-	private int not_read_chat_id;
+	private String roomName;
+	private int notReadChat;
+	private int lastReadChatId;
 }

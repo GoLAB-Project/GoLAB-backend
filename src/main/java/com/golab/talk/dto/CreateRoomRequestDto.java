@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CreateRoomRequestDto {
 	private int myId;
 	private String type;
-	private String identifier;
+	// identifier 제거 - roomId 중심으로 통일
 	private String roomName;
 	private UserResponseDto[] participant;
 }

@@ -36,13 +36,11 @@ public class Chatting {
 	@Column(name = "MESSAGE", nullable = false)
 	private String message;
 
-	@Column(name = "NOT_READ", nullable = false)
-	private int notRead;
-
+	// notRead 제거 - Participant.lastReadChatId 로 읽음 상태 관리
 	@Column(name = "CREATED_AT", nullable = false)
 	private LocalDateTime createdAt;
 
 	@Column(name = "UPDATED_AT", nullable = false)
 	private LocalDateTime updatedAt;
-	
+
 }
