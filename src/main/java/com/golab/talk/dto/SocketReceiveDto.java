@@ -10,8 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocketReceiveDto {
-	private String type;       // CHAT | READ | ROOM_UPDATE
+	private String type;       // CHAT | READ | ROOM_UPDATE | JOIN
 	private String roomId;
+	private Integer sendUserId;
 	// receiveUserId 제거 - roomId 중심으로 통일
 	private String message;
 	private Integer lastReadChatId; // READ 이벤트 시 사용

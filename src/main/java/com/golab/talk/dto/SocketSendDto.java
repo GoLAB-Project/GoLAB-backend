@@ -13,6 +13,8 @@ import lombok.Setter;
 public class SocketSendDto {
 	private String type;    // CHAT | READ | ROOM_UPDATE
 	private int roomId;
+	private Integer userId;
+	private Integer lastReadChatId;
 	private Chatting chatting;  // CHAT 이벤트 시
 	private Room room;          // CHAT / ROOM_UPDATE 이벤트 시
 }

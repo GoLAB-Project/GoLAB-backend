@@ -69,15 +69,25 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		SocketReceiveDto receiveDto = objectMapper.readValue(message.getPayload(), SocketReceiveDto.class);
 
-		int sendUserId = getUserId(session);
+		int sendUserId = getUserId(session, receiveDto);
 		String type = receiveDto.getType();
 
 		if ("CHAT".equalsIgnoreCase(type)) {
 			handleChat(session, receiveDto, sendUserId);
 		} else if ("READ".equalsIgnoreCase(type)) {
 			handleRead(session, receiveDto, sendUserId);
+		} else if ("JOIN".equalsIgnoreCase(type) || "ENTER".equalsIgnoreCase(type)) {
+			handleJoin(session, receiveDto);
 		} else {
 			log.warn("Unknown event type: {}", type);
+		}
+	}
+
+	private void handleJoin(WebSocketSession session, SocketReceiveDto dto) {
+		if (dto.getRoomId() != null && !dto.getRoomId().isEmpty()) {
+			int roomId = Integer.parseInt(dto.getRoomId());
+			sessionManager.connect(roomId, session);
+			log.debug("Session joined room: roomId={}, sessionId={}", roomId, session.getId());
 		}
 	}
 
@@ -89,6 +99,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 		// ChatService에 위임 - 저장 + Room.lastChat 갱신
 		Chatting saved = chatService.handleChat(roomId, sendUserId, dto.getMessage());
+		// 발신자 본인은 본인이 보낸 메시지를 읽은 것으로 처리
+		chatService.handleRead(sendUserId, roomId, saved.getId());
 		Room room = roomService.getRoomById(roomId);
 
 		// Room Broadcast
@@ -101,20 +113,44 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		sessionManager.sendToRoom(roomId, objectMapper.writeValueAsString(sendDto));
 	}
 
-	private void handleRead(WebSocketSession session, SocketReceiveDto dto, int userId) {
+	private void handleRead(WebSocketSession session, SocketReceiveDto dto, int userId) throws Exception {
 		int roomId = Integer.parseInt(dto.getRoomId());
 		int lastReadChatId = dto.getLastReadChatId() != null ? dto.getLastReadChatId() : 0;
 
 		chatService.handleRead(userId, roomId, lastReadChatId);
 		log.debug("READ handled: userId={}, roomId={}, lastReadChatId={}", userId, roomId, lastReadChatId);
+
+		// 읽음 상태 방 내 다른 참여자들에게 Broadcast
+		SocketSendDto sendDto = new SocketSendDto();
+		sendDto.setType("READ");
+		sendDto.setRoomId(roomId);
+		sendDto.setUserId(userId);
+		sendDto.setLastReadChatId(lastReadChatId);
+		sessionManager.sendToRoom(roomId, objectMapper.writeValueAsString(sendDto));
 	}
 
-	private int getUserId(WebSocketSession session) {
+	private int getUserId(WebSocketSession session, SocketReceiveDto dto) {
+		if (dto != null && dto.getSendUserId() != null && dto.getSendUserId() > 0) {
+			return dto.getSendUserId();
+		}
 		Object userId = session.getAttributes().get("userId");
 		if (userId != null) {
-			return Integer.parseInt(userId.toString());
+			try {
+				return Integer.parseInt(userId.toString());
+			} catch (NumberFormatException ignored) {}
 		}
-		return 1; // 세션 미구현 시 임시값
+		if (session.getUri() != null && session.getUri().getQuery() != null) {
+			String query = session.getUri().getQuery();
+			for (String param : query.split("&")) {
+				String[] pair = param.split("=");
+				if (pair.length == 2 && "userId".equalsIgnoreCase(pair[0])) {
+					try {
+						return Integer.parseInt(pair[1]);
+					} catch (NumberFormatException ignored) {}
+				}
+			}
+		}
+		return 1; // 세션 미구현 시 기본값
 	}
 
 }

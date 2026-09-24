@@ -22,6 +22,9 @@ public class RoomServiceImpl implements RoomService {
 	@Autowired
 	private ParticipantRepository participantRepository;
 
+	@Autowired
+	private com.golab.talk.repository.ChattingRepository chattingRepository;
+
 	@Override
 	public Room getRoomById(int roomId) {
 		return roomRepository.findById(roomId);
@@ -59,13 +62,15 @@ public class RoomServiceImpl implements RoomService {
 			List<Integer> participantIds = participantRepository.getParticipantIdList(p.getRoomId());
 			int[] participantArr = participantIds.stream().mapToInt(Integer::intValue).toArray();
 
+			int unreadCount = chattingRepository.countByRoomIdAndIdGreaterThan(p.getRoomId(), p.getLastReadChatId());
+
 			RoomListResponseDto dto = new RoomListResponseDto();
 			dto.setRoomId(p.getRoomId());
 			dto.setType(room.getType());
 			dto.setRoomName(p.getRoomName());
 			dto.setParticipant(participantArr);
 			dto.setLastChat(room.getLastChat());
-			dto.setNotReadChat(p.getNotReadChat());
+			dto.setNotReadChat(unreadCount);
 			dto.setLastReadChatId(p.getLastReadChatId());
 			dto.setUpdatedAt(room.getUpdatedAt());
 

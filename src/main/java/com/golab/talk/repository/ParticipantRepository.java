@@ -15,7 +15,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
 
 	@Query(
 		value =
-			"SELECT * FROM participant p JOIN room r ON p.room_id = r.id " +
+			"SELECT p.* FROM participant p JOIN room r ON p.room_id = r.id " +
 				"WHERE p.user_id = :userId AND r.last_chat <> ''", nativeQuery = true)
 	List<Participant> findRoomDataByUserId(int userId);
 

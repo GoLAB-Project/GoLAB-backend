@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.golab.talk.domain.User;
 import com.golab.talk.dto.LoginDto;
 import com.golab.talk.dto.UserDto;
 import com.golab.talk.service.UserService;
@@ -18,6 +19,27 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired(required = false)
+    private com.golab.talk.repository.UserRepository userRepository;
+
+    @GetMapping("/id")
+    public ResponseEntity<Integer> getCurrentUserId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            UserDto loggedInUser = (UserDto) session.getAttribute("loggedInUser");
+            if (loggedInUser != null && userRepository != null) {
+                // User login ID로 User 엔티티 검색
+                User user = userRepository.findAll().stream()
+                    .filter(u -> loggedInUser.getUserId().equals(u.getUserId()))
+                    .findFirst().orElse(null);
+                if (user != null) {
+                    return new ResponseEntity<>(user.getId(), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(1, HttpStatus.OK); // 세션이 없거나 테스트 시 기본값 1
+    }
 
     @PostMapping("/join")
     public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
