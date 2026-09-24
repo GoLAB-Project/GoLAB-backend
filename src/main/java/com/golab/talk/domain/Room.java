@@ -29,8 +29,7 @@ public class Room {
 	@Column(name = "id", nullable = false)
 	private int id;
 
-	@Column(name = "identifier", nullable = false)
-	private String identifier;
+	// identifier 제거 - roomId 중심으로 통일
 	@Column(name = "type", nullable = false)
 	private String type;
 	@Column(name = "last_chat", columnDefinition = "text")
@@ -40,11 +39,15 @@ public class Room {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 
-	public Room(String type, String identifier, String lastChat) {
+	public Room(String type, String lastChat) {
 		this.type = type;
-		this.identifier = identifier;
 		this.lastChat = lastChat;
 		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
+	}
+
+	public void updateLastChat(String lastChat) {
+		this.lastChat = lastChat;
 		this.updatedAt = LocalDateTime.now();
 	}
 

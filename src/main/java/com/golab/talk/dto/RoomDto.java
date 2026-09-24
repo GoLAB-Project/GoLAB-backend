@@ -12,8 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomDto {
-	private String identifier;
+	// identifier 제거 - roomId 중심으로 통일
+	private int roomId;
 	private String type;
-	private String last_chat;
-	private LocalDateTime updateAt;
+	private String lastChat;
+	private LocalDateTime updatedAt;
 }

@@ -14,7 +14,7 @@ import lombok.Setter;
 public class RoomListResponseDto {
 	private int roomId;
 	private String type;
-	private String identifier;
+	// identifier 제거 - roomId 중심으로 통일
 	private String roomName;
 	private int[] participant;
 	private String lastChat;
