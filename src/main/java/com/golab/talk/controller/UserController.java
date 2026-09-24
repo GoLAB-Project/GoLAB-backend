@@ -59,7 +59,7 @@ public class UserController {
         if (oldName == null) {
             return new ResponseEntity<>("사용가능한 닉네임입니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("다른 닉네임을 사용해주세요.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("다른 닉네임을 사용해주세요.", HttpStatus.CONFLICT);
         }
     }
 
@@ -70,7 +70,7 @@ public class UserController {
         if (oldUserId == null) {
             return new ResponseEntity<>("사용가능한 아이디입니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("다른 아이디를 사용해주세요.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("다른 아이디를 사용해주세요.", HttpStatus.CONFLICT);
         }
     }
 
@@ -81,7 +81,7 @@ public class UserController {
         if (oldEmail == null) {
             return new ResponseEntity<>("사용가능한 이메일입니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("다른 이메일을 사용해주세요.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("다른 이메일을 사용해주세요.", HttpStatus.CONFLICT);
         }
     }
 
@@ -92,7 +92,7 @@ public class UserController {
         if (userId != null) {
             return new ResponseEntity<>("회원님의 아이디는 " + userId + " 입니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("해당 이메일로 가입된 아이디가 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("해당 이메일로 가입된 아이디가 없습니다.", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -103,7 +103,7 @@ public class UserController {
         if (password != null) {
             return new ResponseEntity<>("회원님의 비밀번호는 " + password + " 입니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("비밀번호를 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("비밀번호를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -118,7 +118,7 @@ public class UserController {
             UserDto a = (UserDto)session.getAttribute("loggedInUser");
             return new ResponseEntity<>("로그인에 성공했습니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("로그인에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("로그인에 실패했습니다.", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -132,41 +132,41 @@ public class UserController {
             session.invalidate();
             return new ResponseEntity<>("로그아웃 되었습니다.", HttpStatus.OK);
         }
-        else return new ResponseEntity<>("로그인 되지 않았습니다.", HttpStatus.OK);
+        else return new ResponseEntity<>("로그인 되지 않았습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/password={password}")
     public ResponseEntity<String> checkPassword(@PathVariable("password") String password, HttpServletRequest request) {
-        if(!existSession(request)) return new ResponseEntity<>("세션이 만료되었습니다.\n로그인을 다시 해주세요.", HttpStatus.OK);
+        if(!existSession(request)) return new ResponseEntity<>("세션이 만료되었습니다.\n로그인을 다시 해주세요.", HttpStatus.UNAUTHORIZED);
         boolean checking = userService.checkPassword(password, request);
         if (checking) {
             return new ResponseEntity<>("비밀번호가 일치합니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("비밀번호가 일치하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PatchMapping("/update/password/{password}")
     public ResponseEntity<String> updatePassword(@PathVariable("password") String password, HttpServletRequest request) {
-        if(!existSession(request)) return new ResponseEntity<>("세션이 만료되었습니다.\n로그인을 다시 해주세요.", HttpStatus.OK);
+        if(!existSession(request)) return new ResponseEntity<>("세션이 만료되었습니다.\n로그인을 다시 해주세요.", HttpStatus.UNAUTHORIZED);
         // 비밀번호 업데이트 로직 실행
         int checking = userService.updatePassword(password, request);
         if(checking==1) {
             return new ResponseEntity<>("비밀번호 변경 완료.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("비밀번호 변경 실패.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("비밀번호 변경 실패.", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PatchMapping("/update/name/{name}")
     public ResponseEntity<String> updateName(@PathVariable("name") String name, HttpServletRequest request) {
-        if(!existSession(request)) return new ResponseEntity<>("세션이 만료되었습니다.\n로그인을 다시 해주세요.", HttpStatus.OK);
+        if(!existSession(request)) return new ResponseEntity<>("세션이 만료되었습니다.\n로그인을 다시 해주세요.", HttpStatus.UNAUTHORIZED);
         // 비밀번호 업데이트 로직 실행
         int checking = userService.updateName(name, request);
         if(checking==1) {
             return new ResponseEntity<>("닉네임 변경 완료.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("닉네임 변경 실패.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("닉네임 변경 실패.", HttpStatus.BAD_REQUEST);
         }
     }
 
